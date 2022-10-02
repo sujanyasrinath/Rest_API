@@ -79,6 +79,21 @@ function addUser(user){
     users['users_list'].push(user);
 }
 
+app.delete('/users/:id', (req, res) => {
+    const id = req.params['id']; //or req.params.id
+    let result = deleteUserById(id);
+    if (result === undefined || result.length == 0)
+        res.status(404).send('Resource not found.');
+    else {
+        result = {users_list: result};
+        res.send(result);
+    }
+});
+
+function deleteUserById(user){
+    return users['users_list'].pop( (user) => user['id'] === id);
+}
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 }); 
