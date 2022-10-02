@@ -37,11 +37,18 @@ const users = {
 //Step 4 - Get the full list of users
  app.get('/users', (req, res) => {
     const name = req.query.name;
-    if (name != undefined){
+    const job = req.query.job;
+    if (name != undefined && job!= undefined){
+        let result = findUserByNameAndJob(name,job);
+        result = {users_list: result};
+        res.send(result);
+    }
+    else if (name != undefined){
         let result = findUserByName(name);
         result = {users_list: result};
         res.send(result);
     }
+
     else{
         res.send(users);
     }
@@ -49,6 +56,10 @@ const users = {
 
 const findUserByName = (name) => { 
     return users['users_list'].filter( (user) => user['name'] === name); 
+}
+
+const findUserByNameAndJob = (name,job) => { 
+    return users['users_list'].find(((user) => user['name'] === name) && ((user) => user['job'] === job)); 
 }
 
 //Get User by specific ID
@@ -93,6 +104,10 @@ app.delete('/users/:id', (req, res) => {
 function deleteUserById(user){
     return users['users_list'].pop( (user) => user['id'] === id);
 }
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
